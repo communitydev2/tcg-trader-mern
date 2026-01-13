@@ -14,6 +14,8 @@ import TCGdex from '@tcgdex/sdk'
 
 const router = express.Router();
 const tcgdex = new TCGdex("en");
+
+
 router.get("/getAllUsers", async(req,res) => {
   let collection = await db.collection(collectionUserAccounts);
   let results = await collection.find({}).toArray();
@@ -382,6 +384,7 @@ if not it rejects request
       const {tcgIdNo} = req.body || {};
     const { list, card } = req.body || {};
     let { delta } = req.body || {};
+    const pokemonDb = db.collection("records");
     
     
     
@@ -537,10 +540,29 @@ update this currentTcgIdNoCardUpdateObject with either
           currentTcgIdNoCardUpdateObject['tcgIdName']=currentUserAccount.tcgIdName,
     
           
+          
+          
+          
           console.log(currentTcgIdNoCardUpdateObject);
-         
 
-          // add currentTcgIdNoCardUpdateObject to mongodb
+
+          // Specify card object push into database
+          /*
+          add currentTcgIdNoCardUpdateObject to mongodb
+           updateOne
+            filter - _id:ownerid
+            {
+            Q
+            }
+
+          */
+
+          const insertNewCardInCardsWanted = await pokemonDb.updateOne(
+            { _id: ownerId }
+          )
+
+
+         
 
 
         }catch(error){

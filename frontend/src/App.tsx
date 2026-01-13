@@ -16,7 +16,7 @@ import {  usePokemonCardStore } from "./store/pokemonCardsStore.tsx";
 import LoginForm from "./components/accounts/LoginForm.tsx";
 
 
-export default function App() {
+function App2() {
     const pokeCardStore = usePokemonCardStore();
     
   //  const { isPending, error, data } = useQuery({

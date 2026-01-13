@@ -1,6 +1,25 @@
 import type {PokemonCard} from "./PokemonCard.ts"
 
 
+/*
+
+{
+name:string
+language:{
+"en":string,
+"es":string,
+"fr:string"
+
+}
+
+}
+
+
+
+
+*/
+
+
 
 
 export type PokemonDBStoreType ={
