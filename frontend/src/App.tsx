@@ -10,10 +10,11 @@ import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
-import { getPokemonCardsBackend } from "./api/axiosConfig.tsx";
 import PokeCard from "./components/PokeCards/PokeCard.tsx";
 import {  usePokemonCardStore } from "./store/pokemonCardsStore.tsx";
 import LoginForm from "./components/accounts/LoginForm.tsx";
+import { createClient } from "@supabase/supabase-js";
+import { useEffect,useState } from 'react';
 
 
 function App2() {
@@ -79,3 +80,41 @@ function App2() {
  
  
 }
+
+const supabase = createClient(import.meta.env.VITE_SUPABASE_URL, import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY);
+
+function App() {
+
+  const [instruments, setInstruments] = useState([]);
+
+  useEffect(() => {
+
+    getInstruments();
+
+  }, []);
+
+  async function getInstruments() {
+
+    const { data } = await supabase.from("instruments").select();
+
+    setInstruments(data);
+
+  }
+
+  return (
+
+    <ul>
+
+      {instruments.map((instrument) => (
+
+        <li key={instrument.name}>{instrument.name}</li>
+
+      ))}
+
+    </ul>
+
+  );
+
+}
+
+export default App;
