@@ -3,6 +3,8 @@ from tcgdexsdk import TCGdex
 import asyncio
 import requests
 import json
+import pandas as pd
+from io import StringIO
 
 
 tcgdex = TCGdex('en')
@@ -134,13 +136,109 @@ async def getNamesOfAllSets():
 #     // console.log(setname[0].name)
 #     return setname;
 #   }
-  
+
+    
+
+def filterCardTableIntoCsv(file_path):
+        # get data
+        # filter pokemon names into csv
+        with open(file_path, 'r') as file:
+            data = json.load(file)
+        # print(data)
+        filtered_data=[]
+        for index, currentPokemon in enumerate(data):
+
+            # with open(r"routeDataDumps/tests/filteredCardsTable.json", 'w', encoding="utf-8") as f:
+            #     json.dump(data[0], f, ensure_ascii=False)
+            # print(currentPokemon)
+            try:
+
+                filtered_object = {
+                    "cardName":currentPokemon['name'],
+                    "cardImage" : currentPokemon['image'],
+                    "cardLocalId" : currentPokemon['id']
+
+                    # "rarity" : currentPokemon['rarity'],
+                }
+            except:
+                filtered_object = {
+                    "cardName":currentPokemon['name'],
+                    "cardLocalId" : currentPokemon['id']
+
+                    # "rarity" : currentPokemon['rarity'],
+                }
+
+            filtered_data.append(filtered_object)
+        # with open(r"routeDataDumps/tests/filteredCardsTable.json", 'w', encoding="utf-8") as f:
+        #     json.dump(filtered_data, f, ensure_ascii=False)
+
+        # read in pandas
+        e =json.dumps(filtered_data)
+        data = pd.read_json(StringIO(e))
+        
+        # save in csv file
+        data.to_csv(r"routeDataDumps/filteredCsvs/cardsTable.csv",index=False)
+        # with open(r"routeDataDumps/filteredCsvs/cardsTable.json", 'w', encoding="utf-8") as f:
+            # json.dump(filtered_data, f, ensure_ascii=False)
+def filterCardTableIntoCsv2(file_path):
+        # get data
+        # filter pokemon names into csv
+        with open(file_path, 'r') as file:
+            data = json.load(file)
+        # print(data)
+        filtered_data=[]
+        for index, currentPokemon in enumerate(data):
+
+            # with open(r"routeDataDumps/tests/filteredCardsTable.json", 'w', encoding="utf-8") as f:
+            #     json.dump(data[0], f, ensure_ascii=False)
+            # print(currentPokemon)
+            try:
+
+                filtered_object = {
+                    "cardName":currentPokemon['name'],
+                    "cardImage" : currentPokemon['image'],
+                    "cardLocalId" : currentPokemon['id']
+
+                    # "rarity" : currentPokemon['rarity'],
+                }
+            except:
+                filtered_object = {
+                    "cardName":currentPokemon['name'],
+                    "cardLocalId" : currentPokemon['id']
+
+                    # "rarity" : currentPokemon['rarity'],
+                }
+
+            filtered_data.append(filtered_object)
+        # with open(r"routeDataDumps/tests/filteredCardsTable.json", 'w', encoding="utf-8") as f:
+        #     json.dump(filtered_data, f, ensure_ascii=False)
+
+        # read in pandas
+        e =json.dumps(filtered_data)
+        data = pd.read_json(StringIO(e))
+        
+        # save in csv file
+        data.to_csv(r"routeDataDumps/filteredCsvs/cardsTable.csv",index=False)
+        # with open(r"routeDataDumps/filteredCsvs/cardsTable.json", 'w', encoding="utf-8") as f:
+            # json.dump(filtered_data, f, ensure_ascii=False)
+
+# 
+
+
+
 async def main():
     # get All set Names except Promos
-    allSetNames = await asyncio.gather(getNamesOfAllSets())
+    # allSetNames = await asyncio.gather(getNamesOfAllSets())
     # get All cards info from all sets
     # await asyncio.gather(getCardsOfAllSets(allSetNames))
-    # get All cards info from all sets
-    await asyncio.gather(getLatestSetCards(allSetNames))
+    # ^ get All cards info from all sets (run for new set)
+    # await asyncio.gather(getLatestSetCards(allSetNames))
+    pass
+
+
+
 if __name__ == "__main__":
     asyncio.run(main())
+    file_path = r"C:\Users\Migue\Documents\GitHub\tcg-trader-mern\routeDataDumps\tests\allCardsLatestSet.json"
+    filterCardTableIntoCsv(file_path)
+
