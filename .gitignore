@@ -3,3 +3,4 @@ config.env
 README.md
 *.json
 .env
+*.csv

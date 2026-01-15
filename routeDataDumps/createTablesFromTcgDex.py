@@ -137,88 +137,78 @@ async def getNamesOfAllSets():
 #     return setname;
 #   }
 
+# number of fields to add to new json
+# 
+
+
+# number of things to extract
+'''
+0 - Card Info
+1 - Artists list
+2 - rarity list
+
+
+'''
+def filterCardDBToDesiredOutcomeIntoCsv(file_path,filterChoice,saveCsvName):
+        # get data
+        # filter pokemon names into csv
+        with open(file_path, 'r') as file:
+            data = json.load(file)
+        # print(data)
+        filtered_data=[]
+        for index, currentPokemon in enumerate(data):
+
+            # with open(r"routeDataDumps/tests/filteredCardsTable.json", 'w', encoding="utf-8") as f:
+            #     json.dump(data[0], f, ensure_ascii=False)
+            # print(currentPokemon)
+            if filterChoice==0:
+                try:
+
+                    filtered_object = {
+                        "cardName":currentPokemon['name'],
+                        "cardImage" : currentPokemon['image'],
+                        "cardLocalId" : currentPokemon['id']
+
+                        # "rarity" : currentPokemon['rarity'],
+                    }
+                except:
+                    filtered_object = {
+                        "cardName":currentPokemon['name'],
+                        "cardLocalId" : currentPokemon['id']
+
+                        # "rarity" : currentPokemon['rarity'],
+                    }
+            elif filterChoice ==1:
+                # avoiding duplicate names
+                if currentPokemon['illustrator'] not in filtered_data:
+                    try:
+
+                        filtered_object = {
+                            "name":currentPokemon['illustrator'],
+
+                            # "rarity" : currentPokemon['rarity'],
+                        }
+                    except:
+                        filtered_object = {
+
+                            # "rarity" : currentPokemon['rarity'],
+                        }
     
-
-def filterCardTableIntoCsv(file_path):
-        # get data
-        # filter pokemon names into csv
-        with open(file_path, 'r') as file:
-            data = json.load(file)
-        # print(data)
-        filtered_data=[]
-        for index, currentPokemon in enumerate(data):
-
-            # with open(r"routeDataDumps/tests/filteredCardsTable.json", 'w', encoding="utf-8") as f:
-            #     json.dump(data[0], f, ensure_ascii=False)
-            # print(currentPokemon)
-            try:
-
-                filtered_object = {
-                    "cardName":currentPokemon['name'],
-                    "cardImage" : currentPokemon['image'],
-                    "cardLocalId" : currentPokemon['id']
-
-                    # "rarity" : currentPokemon['rarity'],
-                }
-            except:
-                filtered_object = {
-                    "cardName":currentPokemon['name'],
-                    "cardLocalId" : currentPokemon['id']
-
-                    # "rarity" : currentPokemon['rarity'],
-                }
-
             filtered_data.append(filtered_object)
         # with open(r"routeDataDumps/tests/filteredCardsTable.json", 'w', encoding="utf-8") as f:
         #     json.dump(filtered_data, f, ensure_ascii=False)
 
         # read in pandas
         e =json.dumps(filtered_data)
+
+
+
         data = pd.read_json(StringIO(e))
-        
+        #  remove duplicates in certain choices
+        if filterChoice ==1:
+            data.drop_duplicates(subset=None, keep="first",inplace=True)
         # save in csv file
-        data.to_csv(r"routeDataDumps/filteredCsvs/cardsTable.csv",index=False)
-        # with open(r"routeDataDumps/filteredCsvs/cardsTable.json", 'w', encoding="utf-8") as f:
-            # json.dump(filtered_data, f, ensure_ascii=False)
-def filterCardTableIntoCsv2(file_path):
-        # get data
-        # filter pokemon names into csv
-        with open(file_path, 'r') as file:
-            data = json.load(file)
-        # print(data)
-        filtered_data=[]
-        for index, currentPokemon in enumerate(data):
-
-            # with open(r"routeDataDumps/tests/filteredCardsTable.json", 'w', encoding="utf-8") as f:
-            #     json.dump(data[0], f, ensure_ascii=False)
-            # print(currentPokemon)
-            try:
-
-                filtered_object = {
-                    "cardName":currentPokemon['name'],
-                    "cardImage" : currentPokemon['image'],
-                    "cardLocalId" : currentPokemon['id']
-
-                    # "rarity" : currentPokemon['rarity'],
-                }
-            except:
-                filtered_object = {
-                    "cardName":currentPokemon['name'],
-                    "cardLocalId" : currentPokemon['id']
-
-                    # "rarity" : currentPokemon['rarity'],
-                }
-
-            filtered_data.append(filtered_object)
-        # with open(r"routeDataDumps/tests/filteredCardsTable.json", 'w', encoding="utf-8") as f:
-        #     json.dump(filtered_data, f, ensure_ascii=False)
-
-        # read in pandas
-        e =json.dumps(filtered_data)
-        data = pd.read_json(StringIO(e))
-        
-        # save in csv file
-        data.to_csv(r"routeDataDumps/filteredCsvs/cardsTable.csv",index=False)
+        data.to_csv(rf"routeDataDumps/filteredCsvs/{saveCsvName}.csv",index=False, mode="w")
         # with open(r"routeDataDumps/filteredCsvs/cardsTable.json", 'w', encoding="utf-8") as f:
             # json.dump(filtered_data, f, ensure_ascii=False)
 
@@ -240,5 +230,8 @@ async def main():
 if __name__ == "__main__":
     asyncio.run(main())
     file_path = r"C:\Users\Migue\Documents\GitHub\tcg-trader-mern\routeDataDumps\tests\allCardsLatestSet.json"
-    filterCardTableIntoCsv(file_path)
+    # 0 gets cards table info
+    # filterCardDBToDesiredOutcomeIntoCsv(file_path,0,"cardsTable")
+    # 1 get artists list
+    filterCardDBToDesiredOutcomeIntoCsv(file_path,1,"artistsTable")
 
