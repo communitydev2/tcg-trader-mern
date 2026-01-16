@@ -146,13 +146,13 @@ async def getNamesOfAllSets():
 0 - Card Info
 1 - Artists list
 2 - rarity list
-
+3 - set
 
 '''
 def filterCardDBToDesiredOutcomeIntoCsv(file_path,filterChoice,saveCsvName):
         # get data
         # filter pokemon names into csv
-        with open(file_path, 'r') as file:
+        with open(file_path, 'r', encoding="utf-8") as file:
             data = json.load(file)
         # print(data)
         filtered_data=[]
@@ -165,16 +165,16 @@ def filterCardDBToDesiredOutcomeIntoCsv(file_path,filterChoice,saveCsvName):
                 try:
 
                     filtered_object = {
-                        "cardName":currentPokemon['name'],
-                        "cardImage" : currentPokemon['image'],
-                        "cardLocalId" : currentPokemon['id']
+                        "card_name":currentPokemon['name'],
+                        "card_image" : currentPokemon['image'],
+                        "card_local_id" : currentPokemon['id']
 
                         # "rarity" : currentPokemon['rarity'],
                     }
                 except:
                     filtered_object = {
-                        "cardName":currentPokemon['name'],
-                        "cardLocalId" : currentPokemon['id']
+                        "card_name":currentPokemon['name'],
+                        "card_local_id" : currentPokemon['id']
 
                         # "rarity" : currentPokemon['rarity'],
                     }
@@ -193,6 +193,42 @@ def filterCardDBToDesiredOutcomeIntoCsv(file_path,filterChoice,saveCsvName):
 
                             # "rarity" : currentPokemon['rarity'],
                         }
+            elif filterChoice ==2:
+                    try:
+
+                        filtered_object = {
+                            "name":currentPokemon['rarity'],
+
+                            # "rarity" : currentPokemon['rarity'],
+                        }
+                    except:
+                        filtered_object = {
+
+                            # "rarity" : currentPokemon['rarity'],
+                        }
+            elif filterChoice ==3:
+                
+                    # print(currentPokemon['set']['cardCount']['official'])
+                    # print(currentPokemon['set']['cardCount']['total'])
+                    # print(currentPokemon['set']['id'])
+                    # print(currentPokemon['set']['name'])
+                
+                    try:
+
+                        filtered_object = {
+                            "official_card_count":currentPokemon['set']['cardCount']['official'],
+                            "total_card_count":currentPokemon['set']['cardCount']['total'],
+                            "set_code":currentPokemon['set']['id'],
+                            "set_name":currentPokemon['set']['name'],
+
+                            # "rarity" : currentPokemon['rarity'],
+                        }
+                    except:
+                        filtered_object = {
+
+                            # "rarity" : currentPokemon['rarity'],
+                        }
+
     
             filtered_data.append(filtered_object)
         # with open(r"routeDataDumps/tests/filteredCardsTable.json", 'w', encoding="utf-8") as f:
@@ -204,11 +240,11 @@ def filterCardDBToDesiredOutcomeIntoCsv(file_path,filterChoice,saveCsvName):
 
 
         data = pd.read_json(StringIO(e))
-        #  remove duplicates in certain choices
-        if filterChoice ==1:
+        #  remove duplicates in certain choices (illustrator, rarity)
+        if filterChoice ==1 or filterChoice ==2 or filterChoice ==3 :
             data.drop_duplicates(subset=None, keep="first",inplace=True)
         # save in csv file
-        data.to_csv(rf"routeDataDumps/filteredCsvs/{saveCsvName}.csv",index=False, mode="w")
+        data.to_csv(rf"C:/Users/Migue/Documents/community_dev/docker/{saveCsvName}.csv",index=False, mode="w")
         # with open(r"routeDataDumps/filteredCsvs/cardsTable.json", 'w', encoding="utf-8") as f:
             # json.dump(filtered_data, f, ensure_ascii=False)
 
@@ -229,9 +265,18 @@ async def main():
 
 if __name__ == "__main__":
     asyncio.run(main())
-    file_path = r"C:\Users\Migue\Documents\GitHub\tcg-trader-mern\routeDataDumps\tests\allCardsLatestSet.json"
+    file_path = r"C:/Users/Migue/Documents/GitHub/tcg-trader-mern/routeDataDumps/25122025_allCardsInfo.json"
+    # file_path = r"C:\Users\Migue\Documents\GitHub\tcg-trader-mern\routeDataDumps\tests\allCardsLatestSet.json"
     # 0 gets cards table info
     # filterCardDBToDesiredOutcomeIntoCsv(file_path,0,"cardsTable")
     # 1 get artists list
-    filterCardDBToDesiredOutcomeIntoCsv(file_path,1,"artistsTable")
+    # filterCardDBToDesiredOutcomeIntoCsv(file_path,1,"artistsTable")
+    # 2 get rarity
+    # filterCardDBToDesiredOutcomeIntoCsv(file_path,2,"rarity")
+    # 3 get set
+    filterCardDBToDesiredOutcomeIntoCsv(file_path,3,"set")
+    
+    official_card_count,total_card_count,set_code,set_name
+
+\copy set("official_card_count","total_card_count","set_code","set_name") FROM 'root/data/projects/pokeTrade/set.csv';
 
