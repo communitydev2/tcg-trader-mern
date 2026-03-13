@@ -1,12 +1,11 @@
-import "dotenv/config";
+// import "dotenv/config";
 import express, { response } from "express";
 import cors from "cors";
 import {createClient} from "@supabase/supabase-js"
 
-// if (process.env.NODE_ENV !== "production") {
-//   dotenv.config({ path: ".env" });
-// }
-console.log(meta.env.VITE_SUPABASE_URL);
+if (process.env.NODE_ENV !== "production") {
+  // dotenv.config({ path: ".env" });
+}
 const PORT = process.env.PORT || 5050;
 const app = express();
 

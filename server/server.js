@@ -44,7 +44,7 @@ if (process.env.NODE_ENV !== "production") {
   // find 
   
   
-  // // Use in an async context
+
   // (async () => {
     //   // Retrieve Furret from the Darkness Ablaze Set
     //   // const card = await tcgdex.card.get('swsh3-136');
