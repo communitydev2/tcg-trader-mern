@@ -257,17 +257,22 @@ def filterCardDBToDesiredOutcomeIntoCsv(file_path,filterChoice,saveCsvName):
 
 # 
 
-def assignSupabaseIdsToRarityAndSet(file_to_treat,rarity_table,set_table):
+def assignSupabaseIdsToRarityAndSet(file_to_treat,rarity_table,set_table,new_csv_rarity_set_file_path
+
+):
     # get file to treat
          # filter pokemon names into csv
 
     import csv
     file_untreated = []
+    new_csv = []
     with open(file_to_treat, newline='') as file:
         read = csv.reader(file,delimiter=',',quotechar='|')
         for i, row in enumerate(read):
             # row 0 is the table names which is considered to be a list of length 1
             #so it has to be ignored
+            if i==0:
+                new_csv.append(row)
             if i != 0:
                 file_untreated.append(row)
                 # rarity
@@ -290,10 +295,13 @@ def assignSupabaseIdsToRarityAndSet(file_to_treat,rarity_table,set_table):
                 new_row = untouched_values
                 new_row.append(matching_rarity_id)
                 new_row.append(matching_set_id)
-                print(new_row)
+                # print(new_row)
+                new_csv.append(new_row)
                 
-                break
-
+                # break
+        with open(new_csv_rarity_set_file_path, 'w', newline='') as csvfile: 
+            spamwriter = csv.writer(csvfile, delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL) 
+            spamwriter.writerows(new_csv)
     # print(data)
 
     filtered_data=[]
@@ -355,7 +363,9 @@ if __name__ == "__main__":
     # update these values when a new set comes
     rarity_table=[{"idx":0,"rarity_id":"6f112f77-85fa-4bc3-8a42-33759898f9b8","name":"Crown"},{"idx":1,"rarity_id":"f082796c-822c-4851-a039-d09f95b3dd3a","name":"Four Diamond"},{"idx":2,"rarity_id":"b3ec1026-17c9-42c8-b069-966c7ea3d0fe","name":"One Diamond"},{"idx":3,"rarity_id":"93181bc3-c921-4433-98cd-67db6d46864a","name":"One Shiny"},{"idx":4,"rarity_id":"48d4b93d-2999-4567-8d86-62206b8582c6","name":"One Star"},{"idx":5,"rarity_id":"c15def91-ccd8-4707-8ab8-9c07eeea3f4d","name":"Three Diamond"},{"idx":6,"rarity_id":"c55b6396-9283-4dc6-a2f9-5c74b1023c06","name":"Three Star"},{"idx":7,"rarity_id":"3812c945-69a7-47d6-bf09-e42bdcb8f428","name":"Two Diamond"},{"idx":8,"rarity_id":"8fcdc4ef-5e05-4fe9-ad52-aef42f4fd735","name":"Two Shiny"},{"idx":9,"rarity_id":"e6f683be-56ad-44aa-b196-bccff933ebb4","name":"Two Star"}]
     set_table=[{"idx":0,"set_id":"109f3ffc-96ea-4970-8e0b-8ad3a95c44c0","official_card_count":68,"total_card_count":86,"set_code":"A1a","set_name":"Mythical Island"},{"idx":1,"set_id":"1c960509-2605-4b3f-a6e0-39d8ef6724e1","official_card_count":140,"total_card_count":207,"set_code":"A2","set_name":"Space-Time Smackdown"},{"idx":2,"set_id":"2524d3b5-7406-4b94-91b6-8c0317c8812d","official_card_count":72,"total_card_count":111,"set_code":"A2b","set_name":"Shining Revelry"},{"idx":3,"set_id":"46787926-9f02-4262-abb2-d397d5eb373a","official_card_count":69,"total_card_count":103,"set_code":"B1a","set_name":"Crimson Blaze"},{"idx":4,"set_id":"4dc3bf50-5c21-4ad7-bb11-d867cb29aa1b","official_card_count":75,"total_card_count":96,"set_code":"A2a","set_name":"Triumphant Light"},{"idx":5,"set_id":"5b6a6123-7ebe-4d3c-aea9-e48d15c1e07b","official_card_count":71,"total_card_count":105,"set_code":"A4a","set_name":"Secluded Springs"},{"idx":6,"set_id":"6b4a93da-21a3-4e59-85d2-6e731e872cd2","official_card_count":69,"total_card_count":107,"set_code":"A3b","set_name":"Eevee Grove"},{"idx":7,"set_id":"98386032-0d9d-4011-90e1-a0596765c17d","official_card_count":155,"total_card_count":239,"set_code":"A3","set_name":"Celestial Guardians"},{"idx":8,"set_id":"b9620ac1-335f-463d-9bf7-8b04a01851d3","official_card_count":69,"total_card_count":103,"set_code":"A3a","set_name":"Extradimensional Crisis"},{"idx":9,"set_id":"cf352b83-8bb9-478b-a583-487ca6db5d2b","official_card_count":226,"total_card_count":286,"set_code":"A1","set_name":"Genetic Apex"},{"idx":10,"set_id":"d1bb1f2b-7410-4f1b-aca1-b381e4f876cf","official_card_count":226,"total_card_count":331,"set_code":"B1","set_name":"Mega Rising"},{"idx":11,"set_id":"d6499e7d-5fc4-4d28-844c-32d2f2c1b00e","official_card_count":161,"total_card_count":241,"set_code":"A4","set_name":"Wisdom of Sea and Sky"}]
-# replace rarity_id and set_id in cardsTable for their supabase id values
 
+    # replace rarity_id and set_id in cardsTable for their supabase id values
     file_path = r"C:\Users\Migue\Documents\community_dev\docker\cardsTable.csv"
-    assignSupabaseIdsToRarityAndSet(file_path,rarity_table,set_table)
+    new_csv_rarity_set_file_path = r"C:\Users\Migue\Documents\community_dev\docker\cardsTable_supabase_rarity_set_ids.csv"
+    # assignSupabaseIdsToRarityAndSet(file_path,rarity_table,set_table,new_csv_rarity_set_file_path)
+    
